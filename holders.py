@@ -45,6 +45,5 @@ async def get_holders(self)->int:
             wallets_count = 'Error'
             print (e)
             break
-    print (self.pages)
     return wallets_count
 
