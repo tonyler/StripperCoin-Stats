@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import minswap.pools
 
-def strip_price(): #Getting the current price of StripperCoin in ADA using the Minswap DEX
 
+def strip_price(): #Getting the current price of StripperCoin in ADA using the Minswap DEX
     try:
         price = float((minswap.pools.get_pool_by_id(os.environ.get("POOL_ID")).price)[0])
         price = round(price,4)
@@ -13,6 +13,7 @@ def strip_price(): #Getting the current price of StripperCoin in ADA using the M
         print (f"MinSwap error: {e}")
         price = "Minswap Error"
     return price   
+
 
 def ada_price(): #Getting the current price of ADA from Coingecko
     try:
