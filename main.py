@@ -14,7 +14,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="/", intents=intents)
 
 strip = DataCollector()
-strip.dynamic_data()
+
 saved_message = [[1131663427635523604,1131658164870320328]] #This is the message in #strip-stats channel in StripperCoin's Server
 
 embed_stats = discord.Embed(title='StripperCoin Stats',color=0xBF40BF )
