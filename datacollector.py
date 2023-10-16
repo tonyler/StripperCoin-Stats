@@ -1,6 +1,10 @@
 from Value_Locked import TVL
 from prices import strip_price, ada_price
 from holders import get_holders
+from datetime import datetime
+import pytz
+
+utc_timezone = pytz.timezone('UTC')
 
 import os 
 from dotenv import load_dotenv 
@@ -22,3 +26,4 @@ class DataCollector():
         self.market_cap = int(self.price * 69000000) 
         self.holders = await get_holders(self)
         self.tvl = await TVL()
+        self.update = str(datetime.now(utc_timezone).strftime("%H:%M:%S")+" UTC")
