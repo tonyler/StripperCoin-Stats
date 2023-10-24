@@ -7,21 +7,26 @@ from discord.ext import commands, tasks
 from datacollector import DataCollector
 from human_readable import formatIt
 
+
 intents = discord.Intents.all()
 intents.typing = True
 intents.presences = True
 intents.message_content = True  
-bot = commands.Bot(command_prefix="/", intents=intents)
 
+bot = commands.Bot(command_prefix="/", intents=intents)
 strip = DataCollector()
 
-saved_message = [[1131663427635523604,1131658164870320328]] #This is the message in #strip-stats channel in StripperCoin's Server
 
+saved_message = [[1131663427635523604,1131658164870320328]]
 embed_stats = discord.Embed(title='StripperCoin Stats',color=0xBF40BF )
+embed_stats.add_field(name='Current Price :dollar:', value="", inline=False)
+embed_stats.add_field(name='Price in Ada <:cardano:1131689885124796416>', value="", inline=False)
+embed_stats.add_field(name="Market Cap :moneybag:",value="", inline=False)
+embed_stats.add_field(name="Holders :gem:",value="",inline=False)
 embed_nft = discord.Embed(title="StripperCoin's NFTs",color=0xBF40BF,
-                         description="[Box Girls](<https://www.jpg.store/collection/strippercoinboxgirls>) <:strip:1135350102349860937> \
-                                      \n[Casey NFTease](<https://www.jpg.store/collection/strippercoinnftease-caseycastille?tab=items>) <:exxx:1135350359364227204>"\
-                                      "\n[Emiline NFTease](<https://www.jpg.store/collection/strippercoinnftease-emiline>) <:exxx:1135350359364227204>")
+                       description="[Box Girls](<https://www.jpg.store/collection/strippercoinboxgirls>) <:strip:1135350102349860937> \
+                    \n[Casey NFTease](<https://www.jpg.store/collection/strippercoinnftease-caseycastille?tab=items>) <:exxx:1135350359364227204>"\
+                    "\n[Emiline NFTease](<https://www.jpg.store/collection/strippercoinnftease-emiline>) <:exxx:1135350359364227204>")
 embed_stats.set_footer(text='Powered by @tonyler', icon_url='https://pbs.twimg.com/profile_images/1698204398663372800/5qeTwmIS_400x400.jpg')
 embed_nft.set_footer(text='Powered by @tonyler', icon_url='https://pbs.twimg.com/profile_images/1698204398663372800/5qeTwmIS_400x400.jpg')
 
@@ -37,7 +42,6 @@ async def message_creation(strip):
     messageToBeSent = messageToBeSent +"\n*I'm just a community member!*☕"
     messageToBeSent = messageToBeSent+"\n Last update: "+(strip.update)
     return messageToBeSent
-
 
 async def fixed_messages(saved_message):
     while True: 
@@ -62,6 +66,7 @@ async def on_ready():
     for message in saved_message:
         await fixed_messages(message) #starts the loop for the pre-selected hard-coded messages that need to be online 24/7
 
+
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)   
@@ -70,26 +75,34 @@ async def on_message(message):
             saved_message=[message.id,message.channel.id]
             await fixed_messages(saved_message)
 
+
 @bot.command(name="stats_forever")
 async def stats_247(ctx):
         await ctx.send ("``This will take less than 2 minutes.``")
+
      
 @bot.command(name="stats")
 async def send_embed(ctx):
-    embed_stats.add_field(name='Current Price :dollar:', value=(f"{strip.price} $"), inline=False)
-    embed_stats.add_field(name='Price in Ada <:cardano:1131689885124796416>', value=(f"{strip.ada} ₳"), inline=False)
-    embed_stats.add_field(name="Market Cap :moneybag:",value=(f"{formatIt(strip.market_cap)} $"), inline=False)
-    embed_stats.add_field(name="Holders :gem:",value=(f"{strip.holders}"),inline=False)
+    embed_stats.set_field_at(index=0,name='Current Price :dollar:', value=(f"{strip.price} $"), inline=False)
+    embed_stats.set_field_at(index=1,name='Price in Ada <:cardano:1131689885124796416>', value=(f"{strip.ada} ₳"), inline=False)
+    embed_stats.set_field_at(index=2,name="Market Cap :moneybag:",value=(f"{formatIt(strip.market_cap)} $"), inline=False)
+    embed_stats.set_field_at(index=3,name="Holders :gem:",value=(f"{strip.holders}"),inline=False)
     await ctx.send(embed=embed_stats)
+ 
+
 
 @bot.command(name="nft")
 async def nfts(ctx): 
     await ctx.send(embed=embed_nft)
+
 
 @tasks.loop(minutes = 2)
 async def update():
         await strip.dynamic_data()
         print ("Updated data ✅")
 
+# messageID = 1131663427635523604
+# channelID = 1131658164870320328
 BOT_TOKEN = os.environ.get("DISCORD_KEY")
+
 bot.run(BOT_TOKEN)
