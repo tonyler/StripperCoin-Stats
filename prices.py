@@ -15,6 +15,7 @@ def strip_price(): #Getting the current price of StripperCoin in ADA using the M
             print ("trying to get minswap price again")
     return price   
 
+
 def ada_price(): #Getting the current price of ADA from Coingecko
     while True:
         try:
